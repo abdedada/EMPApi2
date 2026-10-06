@@ -1,0 +1,1258 @@
+{
+  "info": {
+    "name": "Education API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Collection pour tester tous les endpoints de l'API Education"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Root",
+      "item": [
+        {
+          "name": "Get Root",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": ["/"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('token', response.access_token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/me",
+              "host": ["{{base_url}}"],
+              "path": ["users", "me"]
+            }
+          }
+        },
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/?skip=0&limit=100",
+              "host": ["{{base_url}}"],
+              "path": ["users", "/"],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "100"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["users", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"updated@example.com\",\n  \"password\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["users", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["users", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Education",
+      "item": [
+        {
+          "name": "School Years",
+          "item": [
+            {
+              "name": "Create School Year",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"label\": \"2024-2025\",\n  \"startAt\": \"2024-09-01T00:00:00\",\n  \"endAt\": \"2025-06-30T23:59:59\",\n  \"enabled\": true,\n  \"current\": true\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/education/school-years/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "school-years", "/"]
+                }
+              }
+            },
+            {
+              "name": "List School Years",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/school-years/?skip=0&limit=100",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "school-years", "/"],
+                  "query": [
+                    {
+                      "key": "skip",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get School Year by ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/school-years/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "school-years", "1"]
+                }
+              }
+            },
+            {
+              "name": "Update School Year",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"label\": \"2024-2025 Updated\",\n  \"enabled\": false\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/education/school-years/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "school-years", "1"]
+                }
+              }
+            },
+            {
+              "name": "Delete School Year",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/school-years/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "school-years", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Classes",
+          "item": [
+            {
+              "name": "Create Classe",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"label\": \"Classe A\",\n  \"filiere\": \"Informatique\",\n  \"schoolYear_id\": 1\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/education/classes/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "classes", "/"]
+                }
+              }
+            },
+            {
+              "name": "List Classes",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/classes/?skip=0&limit=100",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "classes", "/"],
+                  "query": [
+                    {
+                      "key": "skip",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Classe by ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/classes/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "classes", "1"]
+                }
+              }
+            },
+            {
+              "name": "Update Classe",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"label\": \"Classe A Updated\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/education/classes/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "classes", "1"]
+                }
+              }
+            },
+            {
+              "name": "Delete Classe",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/classes/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "classes", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Modules",
+          "item": [
+            {
+              "name": "Create Module",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titre\": \"Module 1\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/education/modules/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "modules", "/"]
+                }
+              }
+            },
+            {
+              "name": "List Modules",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/modules/?skip=0&limit=100",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "modules", "/"],
+                  "query": [
+                    {
+                      "key": "skip",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Module by ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/modules/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "modules", "1"]
+                }
+              }
+            },
+            {
+              "name": "Update Module",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titre\": \"Module 1 Updated\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/education/modules/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "modules", "1"]
+                }
+              }
+            },
+            {
+              "name": "Delete Module",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/modules/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "modules", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Chapitres",
+          "item": [
+            {
+              "name": "Create Chapitre",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"num\": 1,\n  \"titre\": \"Chapitre 1\",\n  \"module_id\": 1\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/education/chapitres/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "chapitres", "/"]
+                }
+              }
+            },
+            {
+              "name": "List Chapitres",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/chapitres/?skip=0&limit=100",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "chapitres", "/"],
+                  "query": [
+                    {
+                      "key": "skip",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "List Chapitres by Module",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/chapitres/module/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "chapitres", "module", "1"]
+                }
+              }
+            },
+            {
+              "name": "Get Chapitre by ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/chapitres/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "chapitres", "1"]
+                }
+              }
+            },
+            {
+              "name": "Update Chapitre",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titre\": \"Chapitre 1 Updated\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/education/chapitres/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "chapitres", "1"]
+                }
+              }
+            },
+            {
+              "name": "Delete Chapitre",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/chapitres/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "chapitres", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Questions",
+          "item": [
+            {
+              "name": "Create Question",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"enonce\": \"Quelle est la capitale de la France?\",\n  \"type\": \"texte\",\n  \"chapitre_id\": 1,\n  \"points\": 2.0\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/education/questions/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "questions", "/"]
+                }
+              }
+            },
+            {
+              "name": "List Questions",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/questions/?skip=0&limit=100",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "questions", "/"],
+                  "query": [
+                    {
+                      "key": "skip",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "List Questions by Chapitre",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/questions/chapitre/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "questions", "chapitre", "1"]
+                }
+              }
+            },
+            {
+              "name": "Get Question by ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/questions/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "questions", "1"]
+                }
+              }
+            },
+            {
+              "name": "Update Question",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"enonce\": \"Question mise à jour\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/education/questions/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "questions", "1"]
+                }
+              }
+            },
+            {
+              "name": "Delete Question",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/questions/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "questions", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Evaluations",
+          "item": [
+            {
+              "name": "Create Evaluation",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"num\": \"EVAL001\",\n  \"date\": \"2024-12-01T10:00:00\",\n  \"classe_id\": 1,\n  \"module_id\": 1,\n  \"duree\": 120,\n  \"type\": \"examen\",\n  \"nbr_questions\": 10\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/education/evaluations/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "evaluations", "/"]
+                }
+              }
+            },
+            {
+              "name": "List Evaluations",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/evaluations/?skip=0&limit=100",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "evaluations", "/"],
+                  "query": [
+                    {
+                      "key": "skip",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "List Evaluations by Classe",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/evaluations/classe/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "evaluations", "classe", "1"]
+                }
+              }
+            },
+            {
+              "name": "List Evaluations by Module",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/evaluations/module/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "evaluations", "module", "1"]
+                }
+              }
+            },
+            {
+              "name": "Get Evaluation by ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/evaluations/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "evaluations", "1"]
+                }
+              }
+            },
+            {
+              "name": "Update Evaluation",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"duree\": 150\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/education/evaluations/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "evaluations", "1"]
+                }
+              }
+            },
+            {
+              "name": "Delete Evaluation",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/evaluations/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "evaluations", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Students",
+          "item": [
+            {
+              "name": "Create Student",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"num\": \"STU001\",\n  \"nom\": \"Dupont\",\n  \"prenom\": \"Jean\",\n  \"classe_id\": 1\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/education/students/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "students", "/"]
+                }
+              }
+            },
+            {
+              "name": "List Students",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/students/?skip=0&limit=100",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "students", "/"],
+                  "query": [
+                    {
+                      "key": "skip",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "List Students by Classe",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/students/classe/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "students", "classe", "1"]
+                }
+              }
+            },
+            {
+              "name": "Get Student by ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/students/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "students", "1"]
+                }
+              }
+            },
+            {
+              "name": "Update Student",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nom\": \"Dupont Updated\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/education/students/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "students", "1"]
+                }
+              }
+            },
+            {
+              "name": "Delete Student",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/students/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "students", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Reponses",
+          "item": [
+            {
+              "name": "Create Reponse",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"evaluation_id\": 1,\n  \"student_id\": 1,\n  \"content\": {\"answer\": \"Paris\"}\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/education/reponses/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "reponses", "/"]
+                }
+              }
+            },
+            {
+              "name": "List Reponses",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/reponses/?skip=0&limit=100",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "reponses", "/"],
+                  "query": [
+                    {
+                      "key": "skip",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "List Reponses by Evaluation",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/reponses/evaluation/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "reponses", "evaluation", "1"]
+                }
+              }
+            },
+            {
+              "name": "List Reponses by Student",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/reponses/student/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "reponses", "student", "1"]
+                }
+              }
+            },
+            {
+              "name": "Get Reponse by ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/reponses/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "reponses", "1"]
+                }
+              }
+            },
+            {
+              "name": "Update Reponse",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"score\": 8.5\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/education/reponses/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "reponses", "1"]
+                }
+              }
+            },
+            {
+              "name": "Delete Reponse",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/education/reponses/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "education", "reponses", "1"]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
